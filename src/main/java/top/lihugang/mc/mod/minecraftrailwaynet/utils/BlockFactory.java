@@ -10,9 +10,11 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
+import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
+
 public class BlockFactory {
     public static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
-        final Identifier identifier = Identifier.of("mrn", path);
+        final Identifier identifier = Identifier.of(MOD_ID, path);
         final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, identifier);
 
         final Block block = Blocks.register(registryKey, factory, settings);

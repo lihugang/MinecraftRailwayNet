@@ -9,8 +9,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
+
+import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
 
 public class Rail extends Block {
     public static final IntProperty DIRECTION = IntProperty.of("direction", 0, 7);
@@ -28,7 +35,16 @@ public class Rail extends Block {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         assert placer != null;
-        Vec3d facing = placer.getFacing().getDoubleVector();
-        System.out.println("" + facing.x + " " + facing.z);
+        float yaw = placer.getYaw();
+        if (yaw < 0) yaw += 180;
+        int direction = (int)(((yaw + 11.25) / 22.5) % 8);
+        world.setBlockState(pos, state.with(DIRECTION, direction));
+    }
+
+    @Override
+    public ActionResult onUseWithItem(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (item.getItem() != Registries.ITEM.get(Identifier.of(MOD_ID, "item/rail_connector")))
+            return ActionResult.FAIL;
+        return ActionResult.SUCCESS;
     }
 }

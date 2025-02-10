@@ -17,17 +17,23 @@ import top.lihugang.mc.mod.minecraftrailwaynet.utils.BlockFactory;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.ItemFactory;
 
 import top.lihugang.mc.mod.minecraftrailwaynet.blocks.*;
-//import top.lihugang.mc.mod.minecraftrailwaynet.items.*;
+import top.lihugang.mc.mod.minecraftrailwaynet.items.*;
+
+import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
 
 public class register {
     public static void doRegister() {
         Block RailBlock = BlockFactory.register("block/rail", Rail::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
+
+        Item RailConnectorItem = ItemFactory.register("item/rail_connector", RailConnector::new, new Item.Settings().maxCount(1));
+
         ItemGroup CoreGroup = FabricItemGroup.builder()
                 .icon(() -> new ItemStack(RailBlock))
-                .displayName(Text.translatable("itemGroup.mrn.core"))
+                .displayName(Text.translatable("itemGroup." + MOD_ID + ".core"))
                 .entries((context, entries) -> {
                     entries.add(RailBlock);
+                    entries.add(RailConnectorItem);
                 }).build();
-        Registry.register(Registries.ITEM_GROUP, Identifier.of("mrn", "core"), CoreGroup);
+        Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "core"), CoreGroup);
     }
     }
