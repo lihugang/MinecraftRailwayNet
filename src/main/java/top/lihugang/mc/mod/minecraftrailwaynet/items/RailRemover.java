@@ -22,8 +22,8 @@ import java.util.Objects;
 
 import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
 
-public class RailConnector extends Item {
-    public RailConnector(Settings settings) {
+public class RailRemover extends Item {
+    public RailRemover(Settings settings) {
         super(settings);
     }
 
@@ -32,10 +32,8 @@ public class RailConnector extends Item {
         super.appendTooltip(itemstack, context, tooltip, type);
 
         NbtCompound nbt = itemstack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
-        if (nbt.contains("connecting") && nbt.getBoolean("connecting"))
-            tooltip.add(Text.translatable("item.mrn.rail_connector.tooltip.connecting", nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z")));
-        else
-            tooltip.add(Text.translatable("item.mrn.rail_connector.tooltip.unconnected"));
+        if (nbt.contains("removing") && nbt.getBoolean("removing"))
+            tooltip.add(Text.translatable("item.mrn.rail_remover.tooltip.removing", nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z")));
     }
 
     @Override
@@ -48,8 +46,8 @@ public class RailConnector extends Item {
         if (target != RailBlock) return ActionResult.FAIL;
 
         NbtCompound nbt = context.getStack().getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
-        if (nbt.contains("connecting") && nbt.getBoolean("connecting")) {
-            nbt.putBoolean("connecting", false);
+        if (nbt.contains("removing") && nbt.getBoolean("removing")) {
+            nbt.putBoolean("removing", false);
 
             if (!world.isClient) {
                 String key = Objects.requireNonNull(world.getServer()).getSaveProperties().getLevelName() + "." + world.getRegistryKey().getValue().getPath();
@@ -58,10 +56,10 @@ public class RailConnector extends Item {
                 Triplet<Integer, Integer, Integer> to = new Triplet<>(pos.getX(), pos.getY(), pos.getZ());
 
                 if (!from.equals(to))
-                    RailwayNetStorage.getInstance(key).connect(from, to);
+                    RailwayNetStorage.getInstance(key).remove(from, to);
             }
         } else {
-            nbt.putBoolean("connecting", true);
+            nbt.putBoolean("removing", true);
             nbt.putInt("x", pos.getX());
             nbt.putInt("y", pos.getY());
             nbt.putInt("z", pos.getZ());
