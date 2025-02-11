@@ -17,9 +17,9 @@ import top.lihugang.mc.mod.minecraftrailwaynet.items.RailRemover;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.minecraftItemFactory.BlockFactory;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.minecraftItemFactory.ItemFactory;
 
-import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
+import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.MOD_ID;
 
-public class register {
+public class Register {
     public static void doRegister() {
         Block RailBlock = BlockFactory.register("block/rail", Rail::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).noCollision());
 

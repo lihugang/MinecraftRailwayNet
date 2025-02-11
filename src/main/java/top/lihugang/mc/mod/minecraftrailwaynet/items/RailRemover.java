@@ -14,13 +14,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.FetchDimensionIdentifier;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.RailwayNetStorage;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Triplet;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.fetchDimensionIdentifier;
 
 import java.util.List;
 
-import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
+import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.MOD_ID;
 
 public class RailRemover extends Item {
     public RailRemover(Settings settings) {
@@ -50,7 +50,7 @@ public class RailRemover extends Item {
             nbt.putBoolean("removing", false);
 
             if (!world.isClient) {
-                String key = fetchDimensionIdentifier.fetch(world);
+                String key = FetchDimensionIdentifier.fetch(world);
 
                 Triplet<Integer, Integer, Integer> from = new Triplet<>(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
                 Triplet<Integer, Integer, Integer> to = new Triplet<>(pos.getX(), pos.getY(), pos.getZ());

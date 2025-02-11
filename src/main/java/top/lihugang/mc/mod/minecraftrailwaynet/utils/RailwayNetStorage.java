@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
-import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.logger;
+import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.MOD_ID;
+import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.logger;
 
 class RailwayNetChunkStructure {
     int x;

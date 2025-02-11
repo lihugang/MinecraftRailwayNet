@@ -14,7 +14,7 @@
             "top.lihugang.mc.mod.minecraftrailwaynet.client.MinecraftrailwaynetClient"
         ],
         "main": [
-            "top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet"
+            "top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet"
         ]
     },
     "mixins": [

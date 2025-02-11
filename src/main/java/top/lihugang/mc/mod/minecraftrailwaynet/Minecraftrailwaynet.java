@@ -11,7 +11,7 @@ import top.lihugang.mc.mod.minecraftrailwaynet.utils.RailwayNetStorage;
 import java.io.File;
 import java.nio.file.Path;
 
-public class Minecraftrailwaynet implements ModInitializer {
+public class MinecraftRailwayNet implements ModInitializer {
 
     public static final String MOD_ID = "mrn";
     public static final Logger logger = LoggerFactory.getLogger(MOD_ID);
@@ -20,7 +20,7 @@ public class Minecraftrailwaynet implements ModInitializer {
     public void onInitialize() {
         logger.info("Initializing");
 
-        register.doRegister();
+        Register.doRegister();
 
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
         ServerLifecycleEvents.BEFORE_SAVE.register(this::onSave);
