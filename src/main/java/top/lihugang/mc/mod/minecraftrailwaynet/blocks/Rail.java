@@ -10,14 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.ConvertWorldAccessToWorld;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.FetchDimensionIdentifier;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.RailwayNetStorage;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Triplet;
-
-import java.util.Objects;
-
-import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.logger;
 
 public class Rail extends Block {
     public static final IntProperty DIRECTION = IntProperty.of("direction", 0, 7); // pi/8
@@ -50,16 +45,11 @@ public class Rail extends Block {
     }
 
     @Override
-    public void onBroken(WorldAccess worldAccess, BlockPos pos, BlockState state) {
-        // why this function provides WorldAccess!!!
-        // that means that I can't get level name
-        if (!worldAccess.isClient()) {
-            World world = ConvertWorldAccessToWorld.convert(worldAccess);
-            if (Objects.isNull(world)) {
-                logger.warn("Failed to remove rail node ({}, {}, {})", pos.getX(), pos.getY(), pos.getZ());
-                return;
-            }
-            String key = FetchDimensionIdentifier.fetch(world);
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        if (!world.isClient()) {
+            // Because this code runs on Server Side
+            // So we can force cast it to net.minecraft.world.World
+            String key = FetchDimensionIdentifier.fetch((World) world);
 
             RailwayNetStorage.getInstance(key).destroyNode(new Triplet<>(pos.getX(), pos.getY(), pos.getZ()));
         }
