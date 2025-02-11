@@ -27,7 +27,7 @@ public class Coord extends Triplet<Integer, Integer, Integer> {
         return Math.sqrt(
                 (getX() - coord.getX()) * (getX() - coord.getX())
                         + (getY() - coord.getY()) * (getY() - coord.getY())
-                        + (getZ() - coord.getZ()) * (getX() - coord.getX())
+                        + (getZ() - coord.getZ()) * (getZ() - coord.getZ())
         );
     }
 }
