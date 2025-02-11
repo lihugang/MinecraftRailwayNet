@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
-import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
+import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.MOD_ID;
 
 public class BlockFactory {
     public static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {

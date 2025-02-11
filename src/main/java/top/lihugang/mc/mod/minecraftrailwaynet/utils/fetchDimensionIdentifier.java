@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-public class fetchDimensionIdentifier {
+public class FetchDimensionIdentifier {
     static public String fetch(World world) {
         return Objects.requireNonNull(world.getServer()).getSaveProperties().getLevelName() // save name in single player mode
                 + "." +

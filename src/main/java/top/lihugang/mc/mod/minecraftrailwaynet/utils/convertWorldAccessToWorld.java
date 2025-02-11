@@ -6,7 +6,7 @@ import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Objects;
 
-public class convertWorldAccessToWorld { // brute foreach
+public class ConvertWorldAccessToWorld { // brute foreach
     static public World convert(WorldAccess worldAccess) {
         DimensionType dimension = worldAccess.getDimension();
         boolean bedWorks = dimension.bedWorks(),

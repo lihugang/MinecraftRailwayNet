@@ -10,14 +10,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.ConvertWorldAccessToWorld;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.FetchDimensionIdentifier;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.RailwayNetStorage;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Triplet;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.convertWorldAccessToWorld;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.fetchDimensionIdentifier;
 
 import java.util.Objects;
 
-import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.logger;
+import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.logger;
 
 public class Rail extends Block {
     public static final IntProperty DIRECTION = IntProperty.of("direction", 0, 7); // pi/8
@@ -43,7 +43,7 @@ public class Rail extends Block {
         world.setBlockState(pos, state.with(DIRECTION, direction));
 
         if (!world.isClient) {
-            String key = fetchDimensionIdentifier.fetch(world);
+            String key = FetchDimensionIdentifier.fetch(world);
 
             RailwayNetStorage.getInstance(key).addNode(new Triplet<>(pos.getX(), pos.getY(), pos.getZ()), direction);
         }
@@ -54,12 +54,12 @@ public class Rail extends Block {
         // why this function provides WorldAccess!!!
         // that means that I can't get level name
         if (!worldAccess.isClient()) {
-            World world = convertWorldAccessToWorld.convert(worldAccess);
+            World world = ConvertWorldAccessToWorld.convert(worldAccess);
             if (Objects.isNull(world)) {
                 logger.warn("Failed to remove rail node ({}, {}, {})", pos.getX(), pos.getY(), pos.getZ());
                 return;
             }
-            String key = fetchDimensionIdentifier.fetch(world);
+            String key = FetchDimensionIdentifier.fetch(world);
 
             RailwayNetStorage.getInstance(key).destroyNode(new Triplet<>(pos.getX(), pos.getY(), pos.getZ()));
         }
