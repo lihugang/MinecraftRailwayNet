@@ -14,8 +14,8 @@ import net.minecraft.util.Identifier;
 import top.lihugang.mc.mod.minecraftrailwaynet.blocks.Rail;
 import top.lihugang.mc.mod.minecraftrailwaynet.items.RailConnector;
 import top.lihugang.mc.mod.minecraftrailwaynet.items.RailRemover;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.BlockFactory;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.ItemFactory;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.minecraftItemFactory.BlockFactory;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.minecraftItemFactory.ItemFactory;
 
 import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
 

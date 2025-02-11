@@ -1,6 +1,4 @@
-package top.lihugang.mc.mod.minecraftrailwaynet.utils;
-
-import java.util.function.Function;
+package top.lihugang.mc.mod.minecraftrailwaynet.utils.minecraftItemFactory;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -9,6 +7,8 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+
+import java.util.function.Function;
 
 import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
 
@@ -20,4 +20,5 @@ public class BlockFactory {
         final Block block = Blocks.register(registryKey, factory, settings);
         Items.register(block);
         return block;
-    }}
+    }
+}

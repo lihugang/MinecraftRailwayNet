@@ -1,4 +1,4 @@
-package top.lihugang.mc.mod.minecraftrailwaynet.utils;
+package top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms;
 
 import java.util.*;
 

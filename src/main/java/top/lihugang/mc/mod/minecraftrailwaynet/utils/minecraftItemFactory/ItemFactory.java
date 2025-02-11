@@ -1,12 +1,12 @@
-package top.lihugang.mc.mod.minecraftrailwaynet.utils;
-
-import java.util.function.Function;
+package top.lihugang.mc.mod.minecraftrailwaynet.utils.minecraftItemFactory;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+
+import java.util.function.Function;
 
 import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.MOD_ID;
 

@@ -1,6 +1,9 @@
 package top.lihugang.mc.mod.minecraftrailwaynet.utils;
 
 import net.minecraft.util.WorldSavePath;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.LRU;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Pair;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Triplet;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,7 +21,11 @@ import static top.lihugang.mc.mod.minecraftrailwaynet.Minecraftrailwaynet.logger
 class RailwayNetChunkStructure {
     int x;
     int z;
-    Map<Triplet<Integer, Integer, Integer>, List<Triplet<Integer, Integer, Integer>>> data;
+    Map<Triplet<Integer, Integer, Integer>,
+            Pair<Integer, // direction
+                    List<Triplet<Integer, Integer, Integer> // connected rails
+                            >
+                    >> data;
     int size;
     static final String worldSavePath = WorldSavePath.ROOT.getRelativePath();
 
@@ -27,7 +34,7 @@ class RailwayNetChunkStructure {
                 "." +
                 x +
                 "." +
-                z).toString();
+                z + ".dat").toString();
     }
 
     public static RailwayNetChunkStructure readFromFile(String storageId, int x, int z) {
@@ -36,16 +43,17 @@ class RailwayNetChunkStructure {
             FileInputStream fileStream = new FileInputStream(getStoragePath(storageId, x, z));
             ObjectInputStream objectStream = new ObjectInputStream(fileStream);
 
-            Map<Triplet<Integer, Integer, Integer>, List<Triplet<Integer, Integer, Integer>>> data = (Map<Triplet<Integer, Integer, Integer>, List<Triplet<Integer, Integer, Integer>>>) objectStream.readObject();
+            Map<Triplet<Integer, Integer, Integer>, Pair<Integer, List<Triplet<Integer, Integer, Integer>>>> data = (Map<Triplet<Integer, Integer, Integer>, Pair<Integer, List<Triplet<Integer, Integer, Integer>>>>) objectStream.readObject();
 
             objectStream.close();
             fileStream.close();
 
             int size = 3 * 4; // key (x, y, z) * sizeof(int)
-            for (List<Triplet<Integer, Integer, Integer>> values : data.values()) {
-                size += values.size()
+            for (Pair<Integer, List<Triplet<Integer, Integer, Integer>>> values : data.values()) {
+                size += values.second.size()
                         * 3 // (x, y, z)
-                        * 4; // sizeof(int)
+                        * 4 // sizeof(int)
+                        + 4; // direction
             }
 
             return new RailwayNetChunkStructure(x, z, data, size);
@@ -68,18 +76,23 @@ class RailwayNetChunkStructure {
         }
     }
 
-    public RailwayNetChunkStructure(int x, int z, Map<Triplet<Integer, Integer, Integer>, List<Triplet<Integer, Integer, Integer>>> data, int size) {
+    public RailwayNetChunkStructure(int x, int z, Map<Triplet<Integer, Integer, Integer>, Pair<Integer, List<Triplet<Integer, Integer, Integer>>>> data, int size) {
         this.x = x;
         this.z = z;
         this.data = data;
         this.size = size;
     }
 
-    public void connect(Triplet<Integer, Integer, Integer> from, Triplet<Integer, Integer, Integer> to) {
-        if (!this.data.containsKey(from))
-            this.data.put(from, new ArrayList<>());
+    public void addNode(Triplet<Integer, Integer, Integer> position, int direction) {
+        if (this.data.containsKey(position)) return;
+        this.data.put(
+                position,
+                new Pair<>(direction, new ArrayList<>())
+        );
+    }
 
-        List<Triplet<Integer, Integer, Integer>> startRailNode = this.data.get(from);
+    public void connect(Triplet<Integer, Integer, Integer> from, Triplet<Integer, Integer, Integer> to) {
+        List<Triplet<Integer, Integer, Integer>> startRailNode = this.data.get(from).second;
 
         if (startRailNode.contains(to)) return;
 
@@ -89,13 +102,13 @@ class RailwayNetChunkStructure {
 
     public void remove(Triplet<Integer, Integer, Integer> from, Triplet<Integer, Integer, Integer> to) {
         if (!this.data.containsKey(from)) return;
-        List<Triplet<Integer, Integer, Integer>> connectedRails = this.data.get(from);
+        List<Triplet<Integer, Integer, Integer>> connectedRails = this.data.get(from).second;
         connectedRails.remove(to);
         logger.info("Remove {} to {}", from, to);
     }
 
-    public List<Triplet<Integer, Integer, Integer>> getThirdonnectedRails(Triplet<Integer, Integer, Integer> nodePos) {
-        if (this.data.containsKey(nodePos)) return this.data.get(nodePos);
+    public List<Triplet<Integer, Integer, Integer>> getConnectedRails(Triplet<Integer, Integer, Integer> nodePos) {
+        if (this.data.containsKey(nodePos)) return this.data.get(nodePos).second;
         return new ArrayList<>();
     }
 }
@@ -149,6 +162,17 @@ public class RailwayNetStorage {
         }
     }
 
+    public void addNode(Triplet<Integer, Integer, Integer> nodePosition, int railDirection) {
+        Pair<Integer, Integer> chunkId = getChunkId(nodePosition.first, nodePosition.third);
+        loadChunk(chunkId);
+
+        RailwayNetChunkStructure chunk = cachedData.get(chunkId);
+
+        chunk.addNode(nodePosition, railDirection);
+
+        LRUCleanup();
+    }
+
     public void connect(Triplet<Integer, Integer, Integer> from, Triplet<Integer, Integer, Integer> to) {
         Pair<Integer, Integer> firstChunkId, secondChunkId;
         firstChunkId = getChunkId(from.first, from.third);
@@ -195,10 +219,10 @@ public class RailwayNetStorage {
         loadChunk(chunkId);
 
         RailwayNetChunkStructure chunk = cachedData.get(chunkId);
-        List<Triplet<Integer, Integer, Integer>> connectedRails = chunk.getThirdonnectedRails(railPos);
+        List<Triplet<Integer, Integer, Integer>> connectedRails = new ArrayList<>(chunk.getConnectedRails(railPos)); // deep copy
 
         for (Triplet<Integer, Integer, Integer> connectedRail : connectedRails) {
-            chunk.remove(railPos, connectedRail);
+            this.remove(railPos, connectedRail);
         }
 
         LRUCleanup();

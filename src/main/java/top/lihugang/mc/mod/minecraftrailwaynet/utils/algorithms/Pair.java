@@ -1,29 +1,27 @@
-package top.lihugang.mc.mod.minecraftrailwaynet.utils;
+package top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Triplet<A, B, C> implements Serializable {
+public class Pair<A, B> implements Serializable {
     public A first;
     public B second;
-    public C third;
 
-    public Triplet(A first, B second, C third) {
+    public Pair(A first, B second) {
         this.first = first;
         this.second = second;
-        this.third = third;
     }
 
     @Override
     public String toString() {
-        return "(" + first + ", " + second + ", " + third + ")";
+        return "(" + first + ", " + second + ")";
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
-        return Objects.equals(first, ((Triplet<?, ?, ?>) o).first) && Objects.equals(second, ((Triplet<?, ?, ?>) o).second) && Objects.equals(third, ((Triplet<?, ?, ?>) o).third);
+        return Objects.equals(first, ((Pair<?, ?>) o).first) && Objects.equals(second, ((Pair<?, ?>) o).second);
     }
 
     @Override
