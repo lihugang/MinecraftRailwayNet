@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.ConvertWorldAccessToWorld;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.FetchDimensionIdentifier;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.RailwayNetStorage;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Triplet;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Coord;
 
 import java.util.Objects;
 
@@ -45,7 +45,7 @@ public class Rail extends Block {
         if (!world.isClient) {
             String key = FetchDimensionIdentifier.fetch(world);
 
-            RailwayNetStorage.getInstance(key).addNode(new Triplet<>(pos.getX(), pos.getY(), pos.getZ()), direction);
+            RailwayNetStorage.getInstance(key).addNode(new Coord(pos), direction);
         }
     }
 
@@ -61,7 +61,7 @@ public class Rail extends Block {
             }
             String key = FetchDimensionIdentifier.fetch(world);
 
-            RailwayNetStorage.getInstance(key).destroyNode(new Triplet<>(pos.getX(), pos.getY(), pos.getZ()));
+            RailwayNetStorage.getInstance(key).destroyNode(new Coord(pos));
         }
     }
 }
