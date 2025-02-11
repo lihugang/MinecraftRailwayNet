@@ -91,6 +91,10 @@ class RailwayNetChunkStructure {
         );
     }
 
+    public void removeNode(Triplet<Integer, Integer, Integer> position) {
+        this.data.remove(position);
+    }
+
     public void connect(Triplet<Integer, Integer, Integer> from, Triplet<Integer, Integer, Integer> to) {
         List<Triplet<Integer, Integer, Integer>> startRailNode = this.data.get(from).second;
 
@@ -224,6 +228,8 @@ public class RailwayNetStorage {
         for (Triplet<Integer, Integer, Integer> connectedRail : connectedRails) {
             this.remove(railPos, connectedRail);
         }
+
+        chunk.removeNode(railPos);
 
         LRUCleanup();
     }
