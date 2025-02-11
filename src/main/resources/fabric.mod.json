@@ -11,7 +11,7 @@
     "environment": "*",
     "entrypoints": {
         "client": [
-            "top.lihugang.mc.mod.minecraftrailwaynet.client.MinecraftrailwaynetClient"
+            "top.lihugang.mc.mod.minecraftrailwaynet.client.MinecraftRailwayNetClient"
         ],
         "main": [
             "top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet"
