@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.FetchDimensionIdentifier;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.RailwayNetStorage;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Triplet;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Coord;
 
 import java.util.List;
 
@@ -52,8 +52,8 @@ public class RailRemover extends Item {
             if (!world.isClient) {
                 String key = FetchDimensionIdentifier.fetch(world);
 
-                Triplet<Integer, Integer, Integer> from = new Triplet<>(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
-                Triplet<Integer, Integer, Integer> to = new Triplet<>(pos.getX(), pos.getY(), pos.getZ());
+                Coord from = new Coord(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
+                Coord to = new Coord(pos.getX(), pos.getY(), pos.getZ());
 
                 if (!from.equals(to))
                     RailwayNetStorage.getInstance(key).remove(from, to);
