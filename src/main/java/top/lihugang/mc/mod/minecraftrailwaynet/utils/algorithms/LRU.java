@@ -42,4 +42,9 @@ public class LRU<K, V> {
         }
         return result;
     }
+
+    public void clear() {
+        hashmap.clear();
+        list.clear();
+    }
 }

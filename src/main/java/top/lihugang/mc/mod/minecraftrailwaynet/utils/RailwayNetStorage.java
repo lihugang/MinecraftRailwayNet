@@ -22,19 +22,19 @@ class RailwayNetChunkStructure {
     int x;
     int z;
     Map<Triplet<Integer, Integer, Integer>,
-            Pair<Integer, // direction
-                    List<Triplet<Integer, Integer, Integer> // connected rails
-                            >
-                    >> data;
+        Pair<Integer, // direction
+            List<Triplet<Integer, Integer, Integer> // connected rails
+                >
+            >> data;
     int size;
     static final String worldSavePath = WorldSavePath.ROOT.getRelativePath();
 
     static String getStoragePath(String storageId, int x, int z) {
         return Path.of(worldSavePath, MOD_ID, storageId +
-                "." +
-                x +
-                "." +
-                z + ".dat").toString();
+            "." +
+            x +
+            "." +
+            z + ".dat").toString();
     }
 
     public static RailwayNetChunkStructure readFromFile(String storageId, int x, int z) {
@@ -51,9 +51,9 @@ class RailwayNetChunkStructure {
             int size = 3 * 4; // key (x, y, z) * sizeof(int)
             for (Pair<Integer, List<Triplet<Integer, Integer, Integer>>> values : data.values()) {
                 size += values.second.size()
-                        * 3 // (x, y, z)
-                        * 4 // sizeof(int)
-                        + 4; // direction
+                    * 3 // (x, y, z)
+                    * 4 // sizeof(int)
+                    + 4; // direction
             }
 
             return new RailwayNetChunkStructure(x, z, data, size);
@@ -86,8 +86,8 @@ class RailwayNetChunkStructure {
     public void addNode(Triplet<Integer, Integer, Integer> position, int direction) {
         if (this.data.containsKey(position)) return;
         this.data.put(
-                position,
-                new Pair<>(direction, new ArrayList<>())
+            position,
+            new Pair<>(direction, new ArrayList<>())
         );
     }
 
@@ -238,5 +238,10 @@ public class RailwayNetStorage {
         for (Pair<Pair<Integer, Integer>, RailwayNetChunkStructure> chunk : cachedData.getAllData()) {
             chunk.second.writeToFile(name);
         }
+    }
+
+    public void clear() {
+        this.save();
+        cachedData.clear();
     }
 }
