@@ -1,28 +1,17 @@
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Coord;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm.Edge;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm.Node;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm.NodeType;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm.RailwayGlobalGraph;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
-import java.util.*;
-
-enum NodeType {
-    STATION(Color.RED),
-    SIGNAL(Color.BLUE);
-
-    private final Color color;
-
-    NodeType(Color color) {
-        this.color = color;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-}
 
 public class NodeCreator extends JFrame {
     private final DrawingPanel drawingPanel;
-    private final NodeGraph nodeGraph;
+    private final RailwayGlobalGraph nodeGraph;
 
     public NodeCreator() {
         setTitle("右键创建节点");
@@ -30,7 +19,7 @@ public class NodeCreator extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        nodeGraph = new NodeGraph();
+        nodeGraph = RailwayGlobalGraph.getOrCreate(null);
         drawingPanel = new DrawingPanel(nodeGraph);
         add(drawingPanel);
 
@@ -48,24 +37,28 @@ public class NodeCreator extends JFrame {
         stationItem.addActionListener(e -> {
             Point clickPoint = drawingPanel.getLastRightClickPoint();
             if (clickPoint != null) {
-                nodeGraph.addNode(clickPoint, NodeType.STATION);
+                nodeGraph.addNode(NodeType.STATION, point2Coord(clickPoint));
                 drawingPanel.repaint();
             }
         });
         signalItem.addActionListener(e -> {
             Point clickPoint = drawingPanel.getLastRightClickPoint();
             if (clickPoint != null) {
-                nodeGraph.addNode(clickPoint, NodeType.SIGNAL);
+                nodeGraph.addNode(NodeType.SIGNAL, point2Coord(clickPoint));
                 drawingPanel.repaint();
             }
         });
         deleteItem.addActionListener(e -> {
             Point clickPoint = drawingPanel.getLastRightClickPoint();
             if (clickPoint != null) {
-                nodeGraph.removeNodeAt(clickPoint);
+                nodeGraph.removeNodeAt(point2Coord(clickPoint));
                 drawingPanel.repaint();
             }
         });
+    }
+
+    static Coord point2Coord(Point point) {
+        return new Coord(point.x, point.y, 0);
     }
 
     public static void main(String[] args) {
@@ -73,89 +66,14 @@ public class NodeCreator extends JFrame {
     }
 }
 
-class Node {
-    int id;
-    Point position;
-    NodeType type;
-
-    public Node(int id, Point position, NodeType type) {
-        this.id = id;
-        this.position = position;
-        this.type = type;
-    }
-}
-
-class NodeGraph {
-    static final int NODE_RADIUS = 20;
-    private final Map<Integer, Node> nodes = new HashMap<>();
-    private final Map<Integer, List<Edge>> adjacencyList = new HashMap<>();
-    private int nextId = 0;
-
-    public void addNode(Point position, NodeType type) {
-        Node node = new Node(nextId++, position, type);
-        nodes.put(node.id, node);
-        adjacencyList.put(node.id, new ArrayList<>());
-    }
-
-    public void removeNodeAt(Point point) {
-        Node nodeToRemove = findNodeAt(point);
-        if (nodeToRemove != null) {
-            // 移除节点
-            nodes.remove(nodeToRemove.id);
-
-            // 移除所有相关边
-            adjacencyList.remove(nodeToRemove.id);
-            for (List<Edge> edges : adjacencyList.values()) {
-                edges.removeIf(edge -> edge.to == nodeToRemove.id);
-            }
-        }
-    }
-
-    public void addEdge(int from, int to, boolean isDirected) {
-        if (nodes.containsKey(from) && nodes.containsKey(to)) {
-            adjacencyList.get(from).add(new Edge(to, isDirected));
-            if (!isDirected) {
-                adjacencyList.get(to).add(new Edge(from, isDirected));
-            }
-        }
-    }
-
-    public Node findNodeAt(Point point) {
-        for (Node node : nodes.values()) {
-            if (node.position.distance(point) <= NODE_RADIUS) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-    public Collection<Node> getNodes() {
-        return nodes.values();
-    }
-
-    public List<Edge> getEdges(int nodeId) {
-        return adjacencyList.getOrDefault(nodeId, Collections.emptyList());
-    }
-}
-
-class Edge {
-    int to;
-    boolean isDirected;
-
-    public Edge(int to, boolean isDirected) {
-        this.to = to;
-        this.isDirected = isDirected;
-    }
-}
-
 class DrawingPanel extends JPanel {
     private static final int ARROW_SIZE = 10;
-    private final NodeGraph nodeGraph;
+    private final RailwayGlobalGraph nodeGraph;
     private Point lastRightClickPoint;
     private Node dragStartNode;
     private Point currentDragPoint;
 
-    public DrawingPanel(NodeGraph nodeGraph) {
+    public DrawingPanel(RailwayGlobalGraph nodeGraph) {
         this.nodeGraph = nodeGraph;
         setBackground(Color.WHITE);
 
@@ -164,7 +82,7 @@ class DrawingPanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 lastRightClickPoint = e.getPoint();
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    dragStartNode = nodeGraph.findNodeAt(e.getPoint());
+                    dragStartNode = nodeGraph.findNodeAt(NodeCreator.point2Coord(e.getPoint()));
                     currentDragPoint = e.getPoint();
                 }
             }
@@ -172,7 +90,7 @@ class DrawingPanel extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (dragStartNode != null) {
-                    Node endNode = nodeGraph.findNodeAt(e.getPoint());
+                    Node endNode = nodeGraph.findNodeAt(NodeCreator.point2Coord(e.getPoint()));
                     if (endNode != null && endNode.id != dragStartNode.id) {
                         boolean isDirected = !e.isShiftDown();
                         nodeGraph.addEdge(dragStartNode.id, endNode.id, isDirected);
@@ -207,14 +125,18 @@ class DrawingPanel extends JPanel {
         drawTemporaryConnection(g);
     }
 
+    static Point coord2Point(Coord coord) {
+        return new Point(coord.getX(), coord.getY());
+    }
+
     private void drawNodes(Graphics g) {
         for (Node node : nodeGraph.getNodes()) {
             g.setColor(node.type.getColor());
             g.fillOval(
-                node.position.x - NodeGraph.NODE_RADIUS / 2,
-                node.position.y - NodeGraph.NODE_RADIUS / 2,
-                NodeGraph.NODE_RADIUS,
-                NodeGraph.NODE_RADIUS
+                node.coordinate.getX() - RailwayGlobalGraph.NODE_RADIUS / 2,
+                node.coordinate.getY() - RailwayGlobalGraph.NODE_RADIUS / 2,
+                RailwayGlobalGraph.NODE_RADIUS,
+                RailwayGlobalGraph.NODE_RADIUS
             );
         }
     }
@@ -232,7 +154,11 @@ class DrawingPanel extends JPanel {
 
                 if (toNode != null) {
                     g2d.setColor(Color.BLACK);
-                    drawArrowLine(g2d, node.position, toNode.position, edge.isDirected);
+                    drawArrowLine(g2d,
+                        coord2Point(node.coordinate),
+                        coord2Point(toNode.coordinate),
+                        edge.isDirected
+                    );
                 }
             }
         }
@@ -277,8 +203,8 @@ class DrawingPanel extends JPanel {
         if (dragStartNode != null && currentDragPoint != null) {
             g.setColor(Color.GRAY);
             g.drawLine(
-                dragStartNode.position.x,
-                dragStartNode.position.y,
+                dragStartNode.coordinate.getX(),
+                dragStartNode.coordinate.getY(),
                 currentDragPoint.x,
                 currentDragPoint.y
             );
