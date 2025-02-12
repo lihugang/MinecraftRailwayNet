@@ -1,6 +1,7 @@
 {
-    "item.mrn.rail_connector.tooltip.connecting": "Connecting from (%s, %s, %s)",
-    "item.mrn.rail_connector.tooltip.unconnected": "Unconnected",
-    "item.mrn.rail_remover.tooltip.removing": "Removing the rail from (%s, %s, %s)",
+    "item.mrn.rail_connector.tooltip.recording": "Connecting from (%s, %s, %s)",
+    "item.mrn.rail_connector.tooltip.unrecorded": "Unconnected",
+    "item.mrn.rail_remover.tooltip.recording": "Removing the rail from (%s, %s, %s)",
+    "item.mrn.rail_remover.tooltip.unrecorded": "",
     "itemGroup.mrn.core": "Minecraft Railway Net - Core"
 }
