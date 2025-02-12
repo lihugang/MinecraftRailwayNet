@@ -28,29 +28,29 @@ public class RailwayGlobalGraph {
 
     public void addNode(NodeType type, Coord coord) {
         Node node = new Node(nextId++, type, coord);
-        nodes.put(node.id, node);
-        adjacencyList.put(node.id, new ArrayList<>());
+        nodes.put(node.getId(), node);
+        adjacencyList.put(node.getId(), new ArrayList<>());
     }
 
     public void removeNodeAt(Coord coord) {
         Node nodeToRemove = findNodeAt(coord);
         if (nodeToRemove != null) {
             // 移除节点
-            nodes.remove(nodeToRemove.id);
+            nodes.remove(nodeToRemove.getId());
 
             // 移除所有相关边
-            adjacencyList.remove(nodeToRemove.id);
+            adjacencyList.remove(nodeToRemove.getId());
             for (List<Edge> edges : adjacencyList.values()) {
-                edges.removeIf(edge -> edge.to == nodeToRemove.id);
+                edges.removeIf(edge -> edge.to == nodeToRemove.getId());
             }
         }
     }
 
     public void addEdge(int from, int to, boolean isDirected) {
         if (nodes.containsKey(from) && nodes.containsKey(to)) {
-            adjacencyList.get(from).add(new Edge(to, isDirected));
+            adjacencyList.get(from).add(new Edge(to, 1));
             if (!isDirected) {
-                adjacencyList.get(to).add(new Edge(from, isDirected));
+                adjacencyList.get(to).add(new Edge(from, 1));
             }
         }
     }

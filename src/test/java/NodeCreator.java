@@ -91,9 +91,9 @@ class DrawingPanel extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 if (dragStartNode != null) {
                     Node endNode = nodeGraph.findNodeAt(NodeCreator.point2Coord(e.getPoint()));
-                    if (endNode != null && endNode.id != dragStartNode.id) {
+                    if (endNode != null && endNode.getId() != dragStartNode.getId()) {
                         boolean isDirected = !e.isShiftDown();
-                        nodeGraph.addEdge(dragStartNode.id, endNode.id, isDirected);
+                        nodeGraph.addEdge(dragStartNode.getId(), endNode.getId(), isDirected);
                     }
                     dragStartNode = null;
                     currentDragPoint = null;
@@ -131,7 +131,7 @@ class DrawingPanel extends JPanel {
 
     private void drawNodes(Graphics g) {
         for (Node node : nodeGraph.getNodes()) {
-            g.setColor(node.type.getColor());
+            g.setColor(node.getType().getColor());
             g.fillOval(
                 node.coordinate.getX() - RailwayGlobalGraph.NODE_RADIUS / 2,
                 node.coordinate.getY() - RailwayGlobalGraph.NODE_RADIUS / 2,
@@ -146,9 +146,9 @@ class DrawingPanel extends JPanel {
         g2d.setStroke(new BasicStroke(2));
 
         for (Node node : nodeGraph.getNodes()) {
-            for (Edge edge : nodeGraph.getEdges(node.id)) {
+            for (Edge edge : nodeGraph.getEdges(node.getId())) {
                 Node toNode = nodeGraph.getNodes().stream()
-                    .filter(n -> n.id == edge.to)
+                    .filter(n -> n.getId() == edge.to)
                     .findFirst()
                     .orElse(null);
 
@@ -157,7 +157,7 @@ class DrawingPanel extends JPanel {
                     drawArrowLine(g2d,
                         coord2Point(node.coordinate),
                         coord2Point(toNode.coordinate),
-                        edge.isDirected
+                        true
                     );
                 }
             }
