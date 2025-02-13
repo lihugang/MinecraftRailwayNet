@@ -20,20 +20,26 @@ import top.lihugang.mc.mod.minecraftrailwaynet.utils.minecraftItemFactory.ItemFa
 import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.MOD_ID;
 
 public class Register {
-    public static void doRegister() {
-        Block RailBlock = BlockFactory.register("block/rail", Rail::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).noCollision());
+    public static void register() {
+        registerItemGroups();
+    }
+    /* Items */
+    public static Item RailConnectorItem = ItemFactory.register("item/rail_connector", RailConnector::new, new Item.Settings().maxCount(1));
+    public static Item RailRemoverItem = ItemFactory.register("item/rail_remover", RailRemover::new, new Item.Settings().maxCount(1));
 
-        Item RailConnectorItem = ItemFactory.register("item/rail_connector", RailConnector::new, new Item.Settings().maxCount(1));
-        Item RailRemoverItem = ItemFactory.register("item/rail_remover", RailRemover::new, new Item.Settings().maxCount(1));
+    /* Blocks */
+    public static Block RailBlock = BlockFactory.register("block/rail", Rail::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).noCollision());
 
+
+    public static void registerItemGroups() {
         ItemGroup CoreGroup = FabricItemGroup.builder()
-                .icon(() -> new ItemStack(RailBlock))
-                .displayName(Text.translatable("itemGroup." + MOD_ID + ".core"))
-                .entries((context, entries) -> {
-                    entries.add(RailBlock);
-                    entries.add(RailConnectorItem);
-                    entries.add(RailRemoverItem);
-                }).build();
+            .icon(() -> new ItemStack(RailBlock))
+            .displayName(Text.translatable("itemGroup." + MOD_ID + ".core"))
+            .entries((context, entries) -> {
+                entries.add(RailBlock);
+                entries.add(RailConnectorItem);
+                entries.add(RailRemoverItem);
+            }).build();
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "core"), CoreGroup);
     }
 }

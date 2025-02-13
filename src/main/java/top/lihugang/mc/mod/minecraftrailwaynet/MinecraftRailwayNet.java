@@ -20,7 +20,7 @@ public class MinecraftRailwayNet implements ModInitializer {
     public void onInitialize() {
         logger.info("Initializing");
 
-        Register.doRegister();
+        Register.register();
 
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
         ServerLifecycleEvents.BEFORE_SAVE.register(this::onSave);

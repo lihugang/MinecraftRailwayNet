@@ -1,4 +1,4 @@
-package top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm;
+package top.lihugang.mc.mod.minecraftrailwaynet.utils.netGraphAlgorithm;
 
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
@@ -26,7 +26,7 @@ public class RailwayGlobalGraph {
         return newGraph;
     }
 
-    public void addNode(NodeType type, Coord coord) {
+    public void addNode(NodeTypeEnum type, Coord coord) {
         Node node = new Node(nextId++, type, coord);
         nodes.put(node.getId(), node);
         adjacencyList.put(node.getId(), new ArrayList<>());

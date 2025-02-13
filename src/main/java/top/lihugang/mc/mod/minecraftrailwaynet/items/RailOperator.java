@@ -14,6 +14,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
+import org.jetbrains.annotations.NotNull;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.FetchDimensionIdentifier;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Coord;
 
@@ -21,7 +23,7 @@ import java.util.List;
 
 import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.MOD_ID;
 
-public class RailOperator extends Item {
+public abstract class RailOperator extends Item {
     // The common part of RailConnector and RailRemover
     public RailOperator(Settings settings) {
         super(settings);
@@ -34,8 +36,7 @@ public class RailOperator extends Item {
         NbtCompound nbt = itemstack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
         if (nbt.contains("firstNodeRecorded") && nbt.getBoolean("firstNodeRecorded"))
             tooltip.add(Text.translatable("item.mrn." + getOperatorId() + ".tooltip.recording", nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z")));
-        else
-            tooltip.add(Text.translatable("item.mrn." + getOperatorId() + ".tooltip.unrecorded"));
+        else tooltip.add(Text.translatable("item.mrn." + getOperatorId() + ".tooltip.unrecorded"));
     }
 
     @Override
@@ -57,8 +58,7 @@ public class RailOperator extends Item {
                 Coord from = new Coord(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
                 Coord to = new Coord(pos);
 
-                if (!from.equals(to))
-                    doAction(key, from, to);
+                if (!from.equals(to)) doAction(key, from, to);
             }
         } else {
             nbt.putBoolean("firstNodeRecorded", true);
@@ -71,11 +71,7 @@ public class RailOperator extends Item {
         return ActionResult.SUCCESS;
     }
 
-    public String getOperatorId() {
-        return "";
-    }
+    public abstract String getOperatorId();
 
-    public void doAction(String dimensionName, Coord from, Coord to) {
-
-    }
+    public abstract void doAction(String dimensionName, Coord from, Coord to);
 }

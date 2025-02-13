@@ -1,4 +1,4 @@
-package top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm;
+package top.lihugang.mc.mod.minecraftrailwaynet.utils.netGraphAlgorithm;
 
 public class Edge {
     public int to;

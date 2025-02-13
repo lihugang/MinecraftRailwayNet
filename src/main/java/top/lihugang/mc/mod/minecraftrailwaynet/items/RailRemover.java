@@ -1,5 +1,6 @@
 package top.lihugang.mc.mod.minecraftrailwaynet.items;
 
+import org.jetbrains.annotations.NotNull;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.RailwayNetStorage;
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Coord;
 
@@ -9,7 +10,7 @@ public class RailRemover extends RailOperator {
     }
 
     @Override
-    public String getOperatorId() {
+    public @NotNull String getOperatorId() {
         return "rail_remover";
     }
 

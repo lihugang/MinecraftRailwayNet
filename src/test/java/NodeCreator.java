@@ -1,8 +1,8 @@
 import top.lihugang.mc.mod.minecraftrailwaynet.utils.algorithms.Coord;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm.Edge;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm.Node;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm.NodeType;
-import top.lihugang.mc.mod.minecraftrailwaynet.utils.netgraphalgorithm.RailwayGlobalGraph;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.netGraphAlgorithm.Edge;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.netGraphAlgorithm.Node;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.netGraphAlgorithm.NodeTypeEnum;
+import top.lihugang.mc.mod.minecraftrailwaynet.utils.netGraphAlgorithm.RailwayGlobalGraph;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,14 +37,14 @@ public class NodeCreator extends JFrame {
         stationItem.addActionListener(e -> {
             Point clickPoint = drawingPanel.getLastRightClickPoint();
             if (clickPoint != null) {
-                nodeGraph.addNode(NodeType.STATION, point2Coord(clickPoint));
+                nodeGraph.addNode(NodeTypeEnum.STATION, point2Coord(clickPoint));
                 drawingPanel.repaint();
             }
         });
         signalItem.addActionListener(e -> {
             Point clickPoint = drawingPanel.getLastRightClickPoint();
             if (clickPoint != null) {
-                nodeGraph.addNode(NodeType.SIGNAL, point2Coord(clickPoint));
+                nodeGraph.addNode(NodeTypeEnum.SIGNAL, point2Coord(clickPoint));
                 drawingPanel.repaint();
             }
         });

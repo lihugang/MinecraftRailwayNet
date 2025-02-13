@@ -13,6 +13,8 @@ import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.MOD_ID
 public class ItemFactory {
     public static Item register(String path, Function<Item.Settings, Item> factory, Item.Settings settings) {
         final RegistryKey<Item> registryKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, path));
-        return Items.register(registryKey, factory, settings);
+        // return Items.register(registryKey, factory, settings);
+        final Item item = Items.register(registryKey, factory, settings);
+        return item;
     }
 }

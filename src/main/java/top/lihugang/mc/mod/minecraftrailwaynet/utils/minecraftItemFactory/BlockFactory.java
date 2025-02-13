@@ -14,9 +14,7 @@ import static top.lihugang.mc.mod.minecraftrailwaynet.MinecraftRailwayNet.MOD_ID
 
 public class BlockFactory {
     public static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
-        final Identifier identifier = Identifier.of(MOD_ID, path);
-        final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, identifier);
-
+        final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(MOD_ID, path));
         final Block block = Blocks.register(registryKey, factory, settings);
         Items.register(block);
         return block;
